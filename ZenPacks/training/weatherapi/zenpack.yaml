@@ -1,0 +1,56 @@
+name: ZenPacks.training.weatherapi
+
+zProperties:
+  DEFAULTS:
+    category: rapidapi weather
+
+  zWeatherAPIHost:
+    type: string
+    default: 'weatherapi-com.p.rapidapi.com'
+
+  zWeatherAPIKey:
+    type: string
+    default: '4767ff11ccmsh07e3f8226920ec0p1fb674jsn4711e7bb5020'
+
+  zWeatherAPICities:
+    type: lines
+    default:
+      - Lviv
+      - Kiev
+      - Kirovohrad
+
+classes:
+  WeatherAPIDevice:
+    base: [ zenpacklib.Device ]
+    label: rapidapi weather API
+
+  WeatherAPILocation:
+    base: [ zenpacklib.Component ]
+    label: Location
+
+    properties:
+      country:
+        label: Country
+
+      name:
+        label: City
+
+      lat:
+        label: Latitude
+        grid_display: False
+
+      lon:
+        label: Longitude
+        grid_display: False
+
+class_relationships:
+  - WeatherAPIDevice 1:MC WeatherAPILocation
+
+device_classes:
+  /weatherapi:
+    zProperties:
+      zPythonClass: ZenPacks.training.weatherapi.WeatherAPIDevice
+      zPingMonitorIgnore: true
+      zSnmpMonitorIgnore: true
+      zCollectorPlugins:
+        - weatherapi.Locations
