@@ -32,8 +32,8 @@ classes:
       country:
         label: Country
 
-      name:
-        label: City
+#      name:
+#        label: City
 
       lat:
         label: Latitude
