@@ -19,7 +19,7 @@ class Locations(PythonPlugin):
     """Weather API Locations modeler plugin."""
     
     relname = 'weatherAPILocations'
-    modname = 'ZenPacks.training.weatherapi.WeatherAPILocations'
+    modname = 'ZenPacks.training.weatherapi.WeatherAPILocation'
     
     requiredProperties = (
         'zWeatherAPICities',
@@ -75,9 +75,9 @@ class Locations(PythonPlugin):
             id = self.prepId(locationResult['location']['name'])
             rm.append(self.objectMap({
                 'id': id,
-                'City': locationResult['location']['name'],
-                'Longitude': locationResult['location']['lon'],
-                'Latitude': locationResult['location']['lat'],
-                'Country': locationResult['location']['country'],
+                'lon': locationResult['location']['lon'],
+                'lat': locationResult['location']['lat'],
+                'country': locationResult['location']['country'],
             }))
+        print rm
         return rm
