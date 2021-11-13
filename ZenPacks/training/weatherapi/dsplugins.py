@@ -55,6 +55,7 @@ class Conditions(PythonDataSourcePlugin):
             'x-rapidapi-host': [config.datasources.zWeatherAPIHost],
             'x-rapidapi-key': [config.datasources.zWeatyerAPIKey]
         }
+        LOG.info(headers)
         
         for datasource in config.datasources:
             try:
