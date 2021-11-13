@@ -26,7 +26,7 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
 class Conditions(PythonDataSourcePlugin):
     """WeatherAPI conditions data source plugin."""
     
-    proxy_attrinutes = "zWeatherAPICities, zWeatherAPIHost, zWeatherAPIKey,"
+    proxy_attributes = "zWeatherAPICities, zWeatherAPIHost, zWeatherAPIKey,"
     
     @classmethod
     def config_key(cls, datasource, context):
