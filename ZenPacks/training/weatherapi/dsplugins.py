@@ -30,7 +30,7 @@ class Conditions(PythonDataSourcePlugin):
     
     @classmethod
     def config_key(cls, datasource, context):
-        
+        LOG.info("config_key is working")
         return (
             context.device().id,
             datasource.getCycleTime(context),
@@ -40,6 +40,7 @@ class Conditions(PythonDataSourcePlugin):
     
     @classmethod
     def params(cls, datasource, context):
+        LOG.info("params is working")
         return {
             'city_id': context.id,
             'counrty': context.country,
@@ -47,6 +48,7 @@ class Conditions(PythonDataSourcePlugin):
     
     @inlineCallbacks
     def collect(self, config):
+        LOG.info("collect is working")
         data = self.new_data()
         
         headers = {
@@ -69,6 +71,7 @@ class Conditions(PythonDataSourcePlugin):
                 continue
             
             current_observation = response.get('current')
+            LOG.info(current_observation)
             for datapoint_id in (x.id for x in datasource.points):
                 if datapoint_id not in current_observation:
                     continue
@@ -84,5 +87,5 @@ class Conditions(PythonDataSourcePlugin):
                 
                 dpname = '_'.join((datasource.datasource, datapoint_id))
                 data['values'][datasource.component][dpname] = (value, 'N')
-        
+        LOG.info(data)
         returnValue(data)
