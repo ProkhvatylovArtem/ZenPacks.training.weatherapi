@@ -34,7 +34,6 @@ class Conditions(PythonDataSourcePlugin):
         return (
             context.device().id,
             datasource.getCycleTime(context),
-            context.id,
             'Current conditions',
         )
     
@@ -55,7 +54,7 @@ class Conditions(PythonDataSourcePlugin):
             'x-rapidapi-host': [config.datasources[0].zWeatherAPIHost],
             'x-rapidapi-key': [config.datasources[0].zWeatyerAPIKey]
         }
-        LOG.info(headers)
+        LOG.info("headers: \n", headers)
         
         for datasource in config.datasources:
             try:
