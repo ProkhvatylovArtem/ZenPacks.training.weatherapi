@@ -63,6 +63,7 @@ class Conditions(PythonDataSourcePlugin):
                                                 'https://weatherapi-com.p.rapidapi.com/current.json?q={query}'
                                                 .format(query=config.datasources[0].params['city_id']), Headers(headers))
                 response = yield readBody(response)
+                LOG.info(response)
             except Exception:
                 LOG.exception(
                     "%s: failed to get conditions data for %s",
