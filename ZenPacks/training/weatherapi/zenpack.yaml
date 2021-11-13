@@ -32,8 +32,8 @@ classes:
       country:
         label: Country
 
-#      name:
-#        label: City
+      #      name:
+      #        label: City
 
       lat:
         label: Latitude
@@ -54,3 +54,30 @@ device_classes:
       zSnmpMonitorIgnore: true
       zCollectorPlugins:
         - weatherapi.Locations
+
+    templates:
+      Location:
+        description: Weather monitoring using the rapidapi.weather API.
+        targetPythonClass: ZenPacks.training.weatherapi.WeatherAPILocation
+
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.training.weatherapi.dsplugins.Conditions
+            cycletime: "300"
+
+            datapoints:
+              temp_c: GAUGE
+              wind_kph: GAUGE
+              wind_degree: GAUGE
+              wind_dir: GAUGE
+              humidity: GAUGE
+
+        graphs:
+          Temperatures:
+            units: "degrees C."
+
+            graphpoints:
+              Temperature:
+                dpName: conditions_temp_c
+                format: "%7.2lf"
