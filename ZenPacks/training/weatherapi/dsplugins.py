@@ -54,14 +54,14 @@ class Conditions(PythonDataSourcePlugin):
             'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com',
             'x-rapidapi-key': '4767ff11ccmsh07e3f8226920ec0p1fb674jsn4711e7bb5020',
         }
-        LOG.info("headers: \n", headers)
+        LOG.info("headers: {}".format(headers))
         
         for datasource in config.datasources:
             try:
                 client = Agent(reactor)
                 response = yield client.request('GET',
                                                 'https://weatherapi-com.p.rapidapi.com/current.json?q={query}'
-                                                .format(query=config.datasources[0]['params']['city_id']), Headers(headers))
+                                                .format(query=config.datasources[0].params['city_id']), Headers(headers))
                 response = yield readBody(response)
             except Exception:
                 LOG.exception(
