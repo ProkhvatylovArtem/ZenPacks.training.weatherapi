@@ -51,8 +51,8 @@ class Conditions(PythonDataSourcePlugin):
         data = self.new_data()
         
         headers = {
-            'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com',
-            'x-rapidapi-key': '4767ff11ccmsh07e3f8226920ec0p1fb674jsn4711e7bb5020',
+            'x-rapidapi-host': ['weatherapi-com.p.rapidapi.com'],
+            'x-rapidapi-key': ['4767ff11ccmsh07e3f8226920ec0p1fb674jsn4711e7bb5020'],
         }
         LOG.info("headers: {}".format(headers))
         
@@ -61,8 +61,9 @@ class Conditions(PythonDataSourcePlugin):
                 client = Agent(reactor)
                 response = yield client.request('GET',
                                                 'https://weatherapi-com.p.rapidapi.com/current.json?q={query}'
-                                                .format(query=config.datasources[0].params['city_id']), Headers(headers))
+                                                .format(query=config.datasource.params['city_id']), Headers(headers))
                 response = yield readBody(response)
+                response = json.loads(response)
                 LOG.info(response)
             except Exception:
                 LOG.exception(
@@ -73,20 +74,22 @@ class Conditions(PythonDataSourcePlugin):
             
             current_observation = response.get('current')
             LOG.info(current_observation)
-            for datapoint_id in (x.id for x in datasource.points):
-                if datapoint_id not in current_observation:
-                    continue
-                
-                try:
-                    value = current_observation[datapoint_id]['temp_c']
-                    if isinstance(value, basestring):
-                        value = value.strip(' %')
-                    value = float(value)
-                except (TypeError, ValueError):
-                    # Sometimes values are NA or not available.
-                    continue
-                
-                dpname = '_'.join((datasource.datasource, datapoint_id))
-                data['values'][datasource.component][dpname] = (value, 'N')
+            # if datapoint_id not in current_observation:
+            #     continue
+            
+            if config.datasource.params['city_id'] != response.get('location').get('name'):
+                continue
+            
+            try:
+                value = current_observation.get('temp_c')
+                if isinstance(value, basestring):
+                    value = value.strip(' %')
+                value = float(value)
+            except (TypeError, ValueError):
+                # Sometimes values are NA or not available.
+                continue
+            LOG.info(datasource.datasource)
+            dpname = '_'.join((datasource.datasource, 'temp_c') )
+            data['values'][datasource.component][dpname] = (value, 'N')
         LOG.info(data)
         returnValue(data)
