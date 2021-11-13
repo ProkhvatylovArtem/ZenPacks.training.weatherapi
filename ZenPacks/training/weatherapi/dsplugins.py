@@ -26,7 +26,7 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
 class Conditions(PythonDataSourcePlugin):
     """WeatherAPI conditions data source plugin."""
     
-    proxy_attributes = "zWeatherAPICities, zWeatherAPIHost, zWeatherAPIKey,"
+    proxy_attributes = ('zWeatherAPICities', 'zWeatherAPIHost', 'zWeatherAPIKey',)
     
     @classmethod
     def config_key(cls, datasource, context):
@@ -42,7 +42,7 @@ class Conditions(PythonDataSourcePlugin):
         LOG.info("params is working")
         return {
             'city_id': context.id,
-            'counrty': context.country,
+            'country': context.country,
         }
     
     @inlineCallbacks
@@ -52,7 +52,7 @@ class Conditions(PythonDataSourcePlugin):
         
         headers = {
             'x-rapidapi-host': [config.datasources[0].zWeatherAPIHost],
-            'x-rapidapi-key': [config.datasources[0].zWeatyerAPIKey]
+            'x-rapidapi-key': [config.datasources[0].zWeatherAPIKey]
         }
         LOG.info("headers: \n", headers)
         
