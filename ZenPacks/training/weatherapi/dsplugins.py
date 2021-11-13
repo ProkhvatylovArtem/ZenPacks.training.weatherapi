@@ -61,7 +61,7 @@ class Conditions(PythonDataSourcePlugin):
                 client = Agent(reactor)
                 response = yield client.request('GET',
                                                 'https://weatherapi-com.p.rapidapi.com/current.json?q={query}'
-                                                .format(query=config.datasource.params['city_id']), Headers(headers))
+                                                .format(query=datasource.params['city_id']), Headers(headers))
                 response = yield readBody(response)
                 response = json.loads(response)
                 LOG.info(response)
