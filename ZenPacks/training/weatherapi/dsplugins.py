@@ -41,6 +41,8 @@ class Conditions(PythonDataSourcePlugin):
     def params(cls, datasource, context):
         LOG.info("params is working")
         return {
+            'WeatherAPIKey': context.zWeatherAPIKey,
+            'WeatherAPIHost': context.zWeatherAPIHost,
             'city_id': context.id,
             'country': context.country,
         }
@@ -51,8 +53,8 @@ class Conditions(PythonDataSourcePlugin):
         data = self.new_data()
         
         headers = {
-            'x-rapidapi-host': ['weatherapi-com.p.rapidapi.com'],
-            'x-rapidapi-key': ['4767ff11ccmsh07e3f8226920ec0p1fb674jsn4711e7bb5020'],
+            'x-rapidapi-host': [config.datasources[0].params['WeatherAPIHost']],
+            'x-rapidapi-key': [config.datasources[0].params['WeatherAPIKey']]
         }
         LOG.info("headers: {}".format(headers))
         
