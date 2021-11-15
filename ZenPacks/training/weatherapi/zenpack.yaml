@@ -61,10 +61,15 @@ device_classes:
         targetPythonClass: ZenPacks.training.weatherapi.WeatherAPILocation
 
         datasources:
+          alerts:
+            type: Python
+            plugin_classname: ZenPacks.training.weatherapi.dsplugins.Alerts
+            cycletime: "1800"
+
           conditions:
             type: Python
             plugin_classname: ZenPacks.training.weatherapi.dsplugins.Conditions
-            cycletime: "300"
+            cycletime: "1800"
 
             datapoints:
               temp_c: GAUGE
