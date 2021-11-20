@@ -26,8 +26,6 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
 class Conditions(PythonDataSourcePlugin):
     """WeatherAPI conditions data source plugin."""
     
-    proxy_attributes = ('zWeatherAPICities', 'zWeatherAPIHost', 'zWeatherAPIKey',)
-    
     @classmethod
     def config_key(cls, datasource, context):
         LOG.info("config_key is working")
@@ -50,14 +48,11 @@ class Conditions(PythonDataSourcePlugin):
     @inlineCallbacks
     def collect(self, config):
         LOG.info("collect is working")
-        data = self.new_data()
-        
         headers = {
             'x-rapidapi-host': [config.datasources[0].params['WeatherAPIHost']],
             'x-rapidapi-key': [config.datasources[0].params['WeatherAPIKey']]
         }
-        LOG.info("headers: {}".format(headers))
-        
+        result = []
         for datasource in config.datasources:
             try:
                 client = Agent(reactor)
@@ -65,21 +60,35 @@ class Conditions(PythonDataSourcePlugin):
                                                 'https://weatherapi-com.p.rapidapi.com/current.json?q={query}'
                                                 .format(query=datasource.params['city_id']), Headers(headers))
                 response = yield readBody(response)
-                response = json.loads(response)
-                LOG.info(response)
+                result.append(json.loads(response))
+                # LOG.info(response)
             except Exception:
                 LOG.exception(
                     "%s: failed to get conditions data for %s",
                     config.id,
                     datasource.params.get('id'))
                 continue
+        returnValue(result)
+        
+        
+    def onResult(self, result, config):
+        LOG.info("onResult is working")
+        if result is not None:
+            return result
+        else:
+            return None
             
-            current_observation = response.get('current')
+
+    def onSuccess(self, result, config):
+        LOG.info("onSuccess is working")
+        data = self.new_data()
+        for locationResult, datasource in zip(result, config.datasources):
+            current_observation = locationResult.get('current')
             LOG.info(current_observation)
             for datapoint_id in (x.id for x in datasource.points):
                 if datapoint_id not in current_observation:
                     continue
-            
+        
                 try:
                     value = current_observation.get(datapoint_id)
                     if isinstance(value, basestring):
@@ -91,5 +100,23 @@ class Conditions(PythonDataSourcePlugin):
                 LOG.info(datasource.datasource)
                 dpname = '_'.join((datasource.datasource, datapoint_id))
                 data['values'][datasource.component][dpname] = (value, 'N')
-        LOG.info(data)
-        returnValue(data)
+        
+        result = data
+        LOG.info(result)
+        return result
+
+    def onError(self, result, config):
+        """Called only on error. After onResult, before onComplete."""
+        LOG.info("onError working")
+        LOG.exception("In onError - result is {} and config is {}.".format(result, config.id))
+        return result
+
+    def onComplete(self, result, config):
+        """Called last for success and error."""
+        LOG.info("onComplete working")
+        return result
+
+    def cleanup(self, config):
+        """Called when collector exits, or task is deleted or recreated."""
+        LOG.info("cleanup working")
+        return
