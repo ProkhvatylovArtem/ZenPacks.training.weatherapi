@@ -68,7 +68,7 @@ device_classes:
               wind_kph: GAUGE
               humidity: GAUGE
 
-        tresholds:
+        thresholds:
           WindWarning:
             dsnames: [conditions_wind_kph]
             eventClass: /Status
