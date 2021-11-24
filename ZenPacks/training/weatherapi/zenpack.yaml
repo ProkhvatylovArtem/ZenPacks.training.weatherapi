@@ -32,16 +32,11 @@ classes:
       country:
         label: Country
 
-      #      name:
-      #        label: City
-
       lat:
         label: Latitude
-        grid_display: False
 
       lon:
         label: Longitude
-        grid_display: False
 
 class_relationships:
   - WeatherAPIDevice 1:MC WeatherAPILocation
@@ -61,10 +56,6 @@ device_classes:
         targetPythonClass: ZenPacks.training.weatherapi.WeatherAPILocation
 
         datasources:
-          alerts:
-            type: Python
-            plugin_classname: ZenPacks.training.weatherapi.dsplugins.Alerts
-            cycletime: "1800"
 
           conditions:
             type: Python
@@ -73,16 +64,36 @@ device_classes:
 
             datapoints:
               temp_c: GAUGE
+              feelslike_c: GAUGE
               wind_kph: GAUGE
-              wind_degree: GAUGE
-              wind_dir: GAUGE
               humidity: GAUGE
 
-        graphs:
-          Temperatures:
-            units: "degrees C."
+        tresholds:
+          WindWarning:
+            dsnames: [conditions_wind_kph]
+            eventClass: /Status
+            severity: Warning
+            minval: 0
+            maxval: 61
 
+        graphs:
+          Temperature:
+            units: "degrees C."
             graphpoints:
               Temperature:
                 dpName: conditions_temp_c
+                format: "%7.2lf"
+
+          Wind:
+            units: "kph"
+            graphpoints:
+              Wind:
+                dpName: conditions_wind_kph
+                format: "%7.2lf"
+
+          Humidity:
+            units: "%"
+            graphpoints:
+              Humidity:
+                dpName: conditions_humidity
                 format: "%7.2lf"

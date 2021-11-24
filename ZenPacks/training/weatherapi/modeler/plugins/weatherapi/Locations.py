@@ -79,5 +79,4 @@ class Locations(PythonPlugin):
                 'lat': locationResult['location']['lat'],
                 'country': locationResult['location']['country'],
             }))
-        print rm
         return rm
