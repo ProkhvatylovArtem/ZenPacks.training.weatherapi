@@ -32,11 +32,32 @@ classes:
       country:
         label: Country
 
+      tz_id:
+        label: Timezone
+
       lat:
         label: Latitude
 
       lon:
         label: Longitude
+
+      last_updated:
+        label: Time of the last update
+        datapoint: conditions_last_updated
+
+      temp_c:
+        label: Temperature С
+        datapoint: conditions_temp_c
+
+      humidity:
+        label: Humidity
+        datapoint: conditions_humidity
+
+      wind_kph:
+        label: Wind kph
+        datapoint: conditions_wind_kph
+
+    monitoring_templates: [Location]
 
 class_relationships:
   - WeatherAPIDevice 1:MC WeatherAPILocation
@@ -63,8 +84,11 @@ device_classes:
             cycletime: "1800"
 
             datapoints:
+              last_updated: GAUGE
               temp_c: GAUGE
               feelslike_c: GAUGE
+              temp_f: GAUGE
+              feelslike_f: GAUGE
               wind_kph: GAUGE
               humidity: GAUGE
 
@@ -77,11 +101,25 @@ device_classes:
             maxval: 61
 
         graphs:
-          Temperature:
+          Temperature C:
             units: "degrees C."
             graphpoints:
-              Temperature:
+              RealTemperature:
                 dpName: conditions_temp_c
+                format: "%7.2lf"
+
+              FeelsLikeTemperature:
+                dpName: conditions_feelslike_c
+                format: "%7.2lf"
+
+          Temperature F:
+            units: "degrees F."
+            graphpoints:
+              RealTemperature:
+                dpName: conditions_temp_f
+                format: "%7.2lf"
+              FeelsLikeTemperature:
+                dpName: conditions_feelslike_f
                 format: "%7.2lf"
 
           Wind:
@@ -92,7 +130,7 @@ device_classes:
                 format: "%7.2lf"
 
           Humidity:
-            units: "%"
+            units: "percent"
             graphpoints:
               Humidity:
                 dpName: conditions_humidity
