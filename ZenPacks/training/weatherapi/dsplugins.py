@@ -104,12 +104,21 @@ class Conditions(PythonDataSourcePlugin):
         result = data
         LOG.info(result)
         return result
-
+    
     def onError(self, result, config):
         """Called only on error. After onResult, before onComplete."""
         LOG.info("onError working")
         LOG.exception("In onError - result is {} and config is {}.".format(result, config.id))
-        return result
+        data = self.new_data()
+        data["events"].append({
+            "device": config.id,
+            "eventClass": "/Status/HTTP",
+            "eventKey": "API key. Device: {}.".format(config.id),
+            "severity": 4,
+            "summary": "Failed to get data. Something went wrong."
+        })
+        return data
+    
 
     def onComplete(self, result, config):
         """Called last for success and error."""

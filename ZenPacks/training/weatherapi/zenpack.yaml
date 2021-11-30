@@ -41,10 +41,6 @@ classes:
       lon:
         label: Longitude
 
-      last_updated:
-        label: Time of the last update
-        datapoint: conditions_last_updated
-
       temp_c:
         label: Temperature С
         datapoint: conditions_temp_c
@@ -56,6 +52,10 @@ classes:
       wind_kph:
         label: Wind kph
         datapoint: conditions_wind_kph
+
+      pressure_mb:
+        label: Pressure mb
+        datapoint: conditions_pressure_mb
 
     monitoring_templates: [Location]
 
@@ -84,13 +84,15 @@ device_classes:
             cycletime: "1800"
 
             datapoints:
-              last_updated: GAUGE
               temp_c: GAUGE
               feelslike_c: GAUGE
               temp_f: GAUGE
               feelslike_f: GAUGE
               wind_kph: GAUGE
+              wind_mph: GAUGE
               humidity: GAUGE
+              pressure_mb: GAUGE
+              pressure_in: GAUGE
 
         thresholds:
           WindWarning:
@@ -98,7 +100,7 @@ device_classes:
             eventClass: /Status
             severity: Warning
             minval: 0
-            maxval: 61
+            maxval: 30
 
         graphs:
           Temperature C:
@@ -122,11 +124,18 @@ device_classes:
                 dpName: conditions_feelslike_f
                 format: "%7.2lf"
 
-          Wind:
+          Wind kph:
             units: "kph"
             graphpoints:
               Wind:
                 dpName: conditions_wind_kph
+                format: "%7.2lf"
+
+          Wind mph:
+            units: "mph"
+            graphpoints:
+              Wind:
+                dpName: conditions_wind_mph
                 format: "%7.2lf"
 
           Humidity:
@@ -135,3 +144,24 @@ device_classes:
               Humidity:
                 dpName: conditions_humidity
                 format: "%7.2lf"
+
+          Pressure mb:
+            units: "mbar"
+            graphpoints:
+              Humidity:
+                dpName: conditions_pressure_mb
+                format: "%7.2lf"
+
+          Pressure in:
+            units: "inches of mercury"
+            graphpoints:
+              Humidity:
+                dpName: conditions_pressure_in
+                format: "%7.2lf"
+
+          Thresholds:
+            units:
+            graphpoints:
+              WindWarning:
+                type: WindWarningGraphPoint
+                threshid: WindWarning
